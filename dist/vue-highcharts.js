@@ -84,7 +84,7 @@ function create(tagName, Highcharts, Vue) {
         var chartContainerId = this.chart.container.id;
         setTimeout(function() {
           for (var i = Highcharts.charts.length - 1; i >= 0; i--) {
-            if (Highcharts.charts[i] 
+            if (Highcharts.charts[i]
               && Highcharts.charts[i].container.id === chartContainerId) {
               Highcharts.charts[i].destroy();
             }
