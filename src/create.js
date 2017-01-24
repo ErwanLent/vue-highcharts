@@ -14,7 +14,8 @@ function create(tagName, Highcharts, Vue) {
           width: { type: Number, required: true },
           height: { type: Number, required: true }
         }
-      : { options: { type: Object, required: true } },
+      : { options: { type: Object, required: true },
+          destroyDelay: { type: Number, required: false } },
     methods: {
       _initChart: function() {
         this._renderChart();
@@ -41,8 +42,19 @@ function create(tagName, Highcharts, Vue) {
           delete this.renderer[property];
         }
         this.renderer = null;
-      } else {
-        this.chart.destroy();
+      } else if (this.chart) {
+        if (!this.destroyDelay) {
+          this.chart.destroy();
+          return;
+        }
+        var chartContainerId = this.chart.container.id;
+        setTimeout(function() {
+          for (var i = Highcharts.charts.length - 1; i >= 0; i--) {
+            if (Highcharts.charts[i] && Highcharts.charts[i].container.id === chartContainerId) {
+              Highcharts.charts[i].destroy();
+            }
+          }
+        }, this.destroyDelay);
       }
     }
   };
@@ -64,4 +76,3 @@ function create(tagName, Highcharts, Vue) {
 }
 
 export default create;
-
